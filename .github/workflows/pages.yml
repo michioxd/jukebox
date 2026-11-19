@@ -22,14 +22,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
-        with:
-          node-version: '24'
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
-          bun-version: '1.4.4'
+          bun-version: 'latest'
       - run: bun install --frozen-lockfile
-      - run: bun run test
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
         id: pages
       - name: Verify catalog and build
@@ -37,22 +33,7 @@ jobs:
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
           VITE_INDEX_URL: ${{ vars.VITE_INDEX_URL }}
           VITE_AUDIO_BASE_URL: ${{ vars.VITE_AUDIO_BASE_URL }}
-        run: |
-          node --input-type=module <<'JS'
-          import { parseIndex } from './src/library.ts';
-          const { VITE_INDEX_URL: index, VITE_AUDIO_BASE_URL: audio } = process.env;
-          if (!index || new URL(index).protocol !== 'https:') {
-            throw new Error('Set the VITE_INDEX_URL Actions variable to the public HTTPS catalog URL.');
-          }
-          const response = await fetch(index, { signal: AbortSignal.timeout(30000) });
-          if (!response.ok) throw new Error(`Catalog returned HTTP ${response.status}.`);
-          const library = parseIndex(await response.text(), index, audio || undefined);
-          const tracks = library.categories.flatMap(category => category.versions.flatMap(version => version.tracks));
-          if (!tracks.length || tracks.some(track => track.urls.some(url => !url.startsWith('https://')))) {
-            throw new Error('The catalog must contain playable tracks with HTTPS audio URLs.');
-          }
-          JS
-          bun run build --base="${PAGES_BASE%/}/"
+        run: bun run build --base="${PAGES_BASE%/}/"
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist

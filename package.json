@@ -4,11 +4,11 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "preview": "vite preview",
-        "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "dev": "bunx --bun vite",
+        "build": "bunx --bun tsc && bunx --bun vite build",
+        "preview": "bunx --bun vite preview",
+        "format": "bunx --bun prettier --write .",
+        "format:check": "bunx --bun prettier --check ."
     },
     "dependencies": {
         "@fontsource/google-sans": "^5.3.2",
