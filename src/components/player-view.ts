@@ -143,7 +143,7 @@ export class PlayerView extends LitElement {
                 </div>
                 <span class="time" aria-hidden="true">${time(position)}</span>
                 <span class="time" aria-hidden="true">${time(duration)}</span>
-                ${marked ? html`<div class="loop-legend">${icon("repeat")} <span>Loop ${time(marked.start, true)} - ${time(marked.end, true)}</span></div>` : nothing}
+                ${marked ? html`<div class="loop-legend">${icon("repeat")} <span>${time(marked.start, true)} - ${time(marked.end, true)}</span></div>` : nothing}
             </div>
             <div class="track-copy">
                 <h2>${this.track?.name ?? "No track selected"}</h2>
@@ -226,7 +226,9 @@ export class PlayerView extends LitElement {
             <md-dialog
                 id="settings-dialog"
                 ?quick=${import.meta.env.LEGACY}
-                @closed=${() => { this.speedDraft = undefined; }}
+                @closed=${() => {
+                    this.speedDraft = undefined;
+                }}
             >
                 <div slot="headline">Playback settings</div>
                 <div slot="content" class="playback-settings">
@@ -240,9 +242,13 @@ export class PlayerView extends LitElement {
                             .max=${MAX_SPEED}
                             step="0.01"
                             .value=${this.speedDraft ?? engine?.speed ?? 1}
-                            @input=${(event: Event) => { this.speedDraft = sliderValue(event); }}
+                            @input=${(event: Event) => {
+                                this.speedDraft = sliderValue(event);
+                            }}
                             @change=${(event: Event) => this.commitSpeed(sliderValue(event))}
-                            @pointercancel=${() => { this.speedDraft = undefined; }}
+                            @pointercancel=${() => {
+                                this.speedDraft = undefined;
+                            }}
                         ></${sliderTag}>
                     </div>
                     <label class="pitch-setting">
