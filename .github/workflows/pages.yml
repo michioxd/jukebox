@@ -34,6 +34,7 @@ jobs:
           VITE_INDEX_URL: ${{ vars.VITE_INDEX_URL }}
           VITE_AUDIO_BASE_URL: ${{ vars.VITE_AUDIO_BASE_URL }}
         run: bun run build --base="${PAGES_BASE%/}/"
+      - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: dist
